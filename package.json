@@ -5,7 +5,7 @@
   "main": "dist/src/index.js",
   "type": "module",
   "scripts": {
-    "build": "tsup src --format cjs --dts",
+    "build": "prisma generate && prisma migrate deploy && tsup",
     "start": "node dist/server.js",
     "migrate": "prisma generate && prisma db push",
     "dev": "nodemon",
