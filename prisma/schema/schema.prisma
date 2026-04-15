@@ -1,0 +1,108 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Category {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  subjects  String[]
+  createdAt DateTime @default(now())
+}
+
+model Booking {
+  id             String        @id @default(uuid())
+  studentId      String
+  tutorId        String
+  dateTime       DateTime
+  status         BookingStatus @default(PENDING_PAYMENT)
+  availabilityId String
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  availability   Availability  @relation(fields: [availabilityId], references: [id])
+  student        Student       @relation("StudentBookings", fields: [studentId], references: [id])
+  tutor          TutorProfile  @relation(fields: [tutorId], references: [id])
+  review         Review?
+  payments Payment?
+}
+
+model Review {
+  id        String   @id @default(uuid())
+  bookingId String   @unique
+  studentId String
+  tutorId   String
+  rating    Int
+  comment   String
+  createdAt DateTime @default(now())
+  booking   Booking  @relation(fields: [bookingId], references: [id])
+  student   Student   @relation("StudentReviews", fields: [studentId], references: [id])
+}
+
+
+
+enum BookingStatus {
+  PENDING_PAYMENT
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+}
+
+enum UserRole {
+  USER
+  ADMIN
+  STUDENT
+  TECHNICIAN
+  TUTOR
+  MODERATOR
+}
+
+enum AnalysisType {
+  ATS_SCAN
+  JOB_MATCHER
+}
+
+enum UserStatus {
+  ACTIVE
+  BANNED
+  DELETED
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+}
+
+enum PaymentMethod {
+  STRIPE
+  SSLCOMMERZ
+  PAYPAL
+}
+
+enum CreditType {
+  PURCHASE
+  USAGE
+  REFUND
+  ADMIN_ADJUST
+}
+
+enum BlogStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum IssueType {
+  ISSUE
+  IMPROVEMENT
+  FEEDBACK
+}
+
+enum IssueStatus {
+  PENDING
+  SUCCESS
+}

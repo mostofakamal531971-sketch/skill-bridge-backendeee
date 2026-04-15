@@ -1,0 +1,19 @@
+model TutorProfile {
+  id           String         @id @default(uuid())
+  userId       String         @unique
+  name          String
+  email          String @unique
+  bio          String?
+  hourlyRate   Int?
+  experience   String?
+  subjects     String[] @default([])
+  categoryId   String?
+  category     String? 
+  profileAvatar     String?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  availability Availability[]
+  bookings     Booking[]
+  user         User           @relation(fields: [userId], references: [id])
+  wallet TutorWallet?
+}
